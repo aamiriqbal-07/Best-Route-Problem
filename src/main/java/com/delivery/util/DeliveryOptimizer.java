@@ -4,6 +4,7 @@ import static com.delivery.constants.DeliveryOptimizerConstants.EARTH_RADIUS;
 import static com.delivery.constants.DeliveryOptimizerConstants.SPEED;
 
 import com.delivery.model.Location;
+import com.delivery.model.OptimalRoute;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class DeliveryOptimizer {
   // Function to calculate the Haversine distance between two points
   private static double haversine(double lat1, double lon1, double lat2, double lon2) {
     double dLat = Math.toRadians(lat2 - lat1);
-    double dLon = Math.toRadians(lat2 - lon1);
+    double dLon = Math.toRadians(lon2 - lon1);
     lat1 = Math.toRadians(lat1);
     lat2 = Math.toRadians(lat2);
 
@@ -99,7 +100,7 @@ public class DeliveryOptimizer {
   }
 
   // Function to find the optimal route
-  public static double findOptimalRoute(Location amanLocation,
+  public static OptimalRoute findOptimalRoute(Location amanLocation,
       List<Location> restaurants,
       List<Location> customers, List<Double> prepTimes) {
     int n = restaurants.size();
@@ -109,21 +110,26 @@ public class DeliveryOptimizer {
         validPermutations);
 
     double minTime = Double.MAX_VALUE;
+    List<Integer> bestRoute = new ArrayList<>();
 
-    System.out.println("Size of valid permutations:   " + validPermutations.size());
     for (List<Integer> perm : validPermutations) {
       double currentTime = calculateRouteTime(amanLocation, restaurants, customers, prepTimes,
           perm);
       if (currentTime < minTime) {
         minTime = currentTime;
+        bestRoute = new ArrayList<>(perm);
       }
-
-      for (int id : perm) {
-        System.out.print(id + " ");
-      }
-      System.out.println();
     }
 
-    return minTime;
+    List<String> optimalPath = new ArrayList<>();
+    for (int index : bestRoute) {
+      if (index < n) {
+        optimalPath.add("R" + (index + 1));
+      } else {
+        optimalPath.add("C" + (index - n + 1));
+      }
+    }
+
+    return new OptimalRoute(minTime, optimalPath);
   }
 }
