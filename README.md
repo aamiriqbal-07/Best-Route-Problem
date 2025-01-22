@@ -163,16 +163,26 @@ Defines constants such as `EARTH_RADIUS` and `SPEED` used in the distance and ti
 
 ## Building and Running the Application
 
-1. **Build the project** using Maven:
+1. **Build and run the application using Docker Compose**:
+
    ```sh
-   mvn clean install
+   docker-compose up --build
    ```
 
-2. **Run the application**:
+2. **Access the API**:
+
+   Once the container is running, you can access the API at:
+
    ```sh
-   java -jar target/delivery-optimizer-1.0.0.jar
+   http://localhost:8080/api/v1/bestRoute
+   ```
+3. **Kill the service**:
+
+   ```sh
+   ctrl + c
    ```
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
